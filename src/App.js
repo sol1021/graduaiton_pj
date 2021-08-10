@@ -2,7 +2,7 @@ import './App.css';
 import Login from './login';
 import Home from './home';
 import Join from './join';
-import Main from './main';
+import Main from './templates/main';
 import { Route } from 'react-router-dom';
 
 function App() {
