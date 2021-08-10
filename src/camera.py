@@ -74,42 +74,6 @@ class VideoCamera(object):
             #         self.out = None  
 
         return jpeg.tobytes()
- 
-
-    def save_to_dataset(self):
-        return_data = ''
-        sub_data = 'Tapan_1'
-        (width, height) = (130, 100) 
-
-
-        count = 1
-        path = os.path.join(datasets, sub_data)
-        if not os.path.isdir(path):
-            os.mkdir(path)
-            while count < 20: 
-                success, image = self.video.read()
-                image=cv2.resize(image,None,fx=ds_factor,fy=ds_factor,interpolation=cv2.INTER_AREA)
-                gray=cv2.cvtColor(image,cv2.COLOR_BGR2GRAY)
-                face_rects=face_cascade.detectMultiScale(gray,1.3,5)
-                for (x,y,w,h) in face_rects:
-                    cv2.rectangle(image,(x,y),(x+w,y+h),(0,255,0),2)
-                    face = gray[y:y + h, x:x + w]
-                    face_resize = cv2.resize(face, (width, height))
-                    cv2.imwrite('%s/%s.png' % (path,count), face_resize)
-                count += 1
-
-                if count == 20:
-                    return_data = '20 image captured.'
-                    # cv2.waitKey(1)
-                    # self.video.release()
-                    # cv2.destroyAllWindow()
-                    # time.sleep(1)
-
-                    break
-        else:
-            return_data = "Data already Thr"
-
-        return return_data
 
     def start_record(self):
         self.is_record = True
