@@ -2,10 +2,15 @@
   "name": "project",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://localhost:3000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "axios": "^0.21.1",
+    "build": "^0.1.4",
+    "express": "^4.17.1",
+    "http-proxy-middleware": "^2.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-router-dom": "^5.2.0",
@@ -15,6 +20,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "server": "nodemon server",
+    "client": "npm start --prefix client",
+    "dev": "concurrently -k \"npm run server\" \"npm run client\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
