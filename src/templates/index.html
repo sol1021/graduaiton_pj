@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Streaming Video Recorder</title>
+</head>
+<body>
+<div id="recorder">
+    <form method="post" action="{{ url_for('tasks') }}">
+			<input type="submit" value="Stop/Start" name="stop" />
+      <input type="submit" value="emotion" name="face" />
+			<input type="submit" value="Start/Stop Recording" name="rec" />
+			</form>
+    <a id="download"></a>
+    <script type="text/javascript" src="{{ url_for('static', filename='recorder.js') }}"></script>      
+  </div>
+  <h1>Streaming Video Recorder</h1>
+  
+  <img src="{{ url_for('video_feed') }}" height="80%">
+</body>
+</html>
