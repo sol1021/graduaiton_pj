@@ -4,17 +4,19 @@
   <title>Streaming Video Recorder</title>
 </head>
 <body>
-<div id="recorder">
-    <form method="post" action="{{ url_for('tasks') }}">
-			<input type="submit" value="Stop/Start" name="stop" />
-      <input type="submit" value="emotion" name="face" />
-			<input type="submit" value="Start/Stop Recording" name="rec" />
-			</form>
-    <a id="download"></a>
-    <script type="text/javascript" src="{{ url_for('static', filename='recorder.js') }}"></script>      
-  </div>
-  <h1>Streaming Video Recorder</h1>
-  
-  <img src="{{ url_for('video_feed') }}" height="80%">
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8  offset-lg-2">
+        <h1>Streaming Video Recorder</h1>
+        <form method="post" action="{{ url_for('tasks') }}">
+        <input type="submit" value="Stop/Start" name="stop" />
+        <input type="submit" value="emotion" name="face" />
+			  <input type="submit" value="Start/Stop Recording" name="rec" />
+			  </form>
+        <script type="text/javascript" src="{{ url_for('static', filename='recorder.js') }}"></script>      
+        <img src="{{ url_for('video_feed') }}" height="80%">
+           </div>
+    </div>
+</div>
 </body>
 </html>
