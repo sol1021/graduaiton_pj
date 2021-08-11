@@ -1,3 +1,4 @@
+  
 import cv2
 import threading
 import os
@@ -7,6 +8,8 @@ from deepface import DeepFace
 face_cascade = cv2.CascadeClassifier('src/haarcascade/haarcascade_frontalface_default.xml')
 ds_factor=0.6
 datasets = 'datasets'
+
+global rec
 
 class RecordingThread (threading.Thread):
     def __init__(self, name, camera):
