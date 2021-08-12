@@ -1,0 +1,20 @@
+.footer {
+  background-color:#18234d;
+  padding:45px 0 20px;
+  font-size:15px;
+  line-height:24px;
+  color:#fff;
+  z-index: 7;
+  }
+
+  h6{
+    color:#fff;
+    font-size:16px;
+    text-transform:uppercase;
+    margin-top:5px;
+    letter-spacing:2px;
+    z-index: 7;
+  }
+  li{
+    display:block;
+  }

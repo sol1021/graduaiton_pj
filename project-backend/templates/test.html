@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta http-eqiv="Content-Type" content="text/html"; charset="UTF-8">
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.bundle.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css" />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@200&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Fredoka+One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+        
+        <style>
+        h1{
+           border-bottom: 7px solid #18234d;
+           font-family: 'Archivo Black', sans-serif;
+           font-size:50px;
+        }
+        #eye{
+          float:left;
+          padding:0px 100px 50px 200px;
+        }
+        h2{
+          font-family: 'Jua', sans-serif;
+          font-size:40px;
+          padding:0px 0px 10px 220px;
+        }
+        #smile{
+          float:left;
+           padding:0px 100px 50px 200px;
+        }
+        table{
+          float:left;
+          width: 1500px;
+        }
+        #style-button{
+          width:300px;
+          margin:auto;
+        }
+        .btn{
+           background: transparent;
+           color: #314867;
+           border: 3.5px solid #314867;
+           font-size: 20px;
+           letter-spacing: 2px;
+           padding: 15px 60px;
+           text-transform: uppercase;
+           cursor: pointer;
+           display: inline-block;
+           margin: 10px 25px;
+           -webkit-transition: all 0.4s;
+           -moz-transition: all 0.4s;
+           transition: all 0.4s;
+          }
+        button.btn:hover{
+            background-color: #314867;
+            color:white;
+            -webkit-transition: all 0.4s;
+            -moz-transition: all 0.4s;
+            transition: all 0.4s;
+        }
+        .resultText{
+          width:1500px;
+          height:200px;
+          background: #f5f5f5; 
+          border-radius: 3px; 
+          border: none; 
+          margin: 100px 100px 50px 200px;
+          margin-bottom: 20px; 
+          box-shadow: inset 0px 2px 3px rgba( 0,0,0,0.1 ); 
+          clear:both;
+          font-size: 23px;
+          font-family: 'Noto Sans KR', sans-serif;
+        } 
+        </style>
+      <title>My Page</title>
+  </head>
+  
+  <body>
+    <div>
+      <h1>My Record</h1>
+    </div>
+    <div id='eye'>
+    <h2>눈의 움직임</h2>
+     <canvas width='600' height='600'  id='pieChartCanvas'></canvas>
+     </div>
+     <div id='smile'>
+     <h2>얼굴 표정</h2>
+    <canvas width='600' height='600'  id='smileChart'></canvas>
+    </div>
+    <div class="resultText">
+    <p id="resultEye-1"></p>
+      <p id="resultEye-2"></p>
+      <p id="resultSmile"></p>
+      </div>
+      <div id='style-button'>
+     <button class='btn' onclick="history.back()">again
+     </button >
+     </div>
+  </body>
+</html>
+<script>    
+window.onload = function () {
+    pieChartDraw();
+    smileChartDraw();
+    textResult();
+}
+
+let pieChartData = {
+    labels: ['왼쪽', '오른쪽', '위쪽'],
+    datasets: [{
+        data: [{{left_ratio}}, {{right_ratio}}, {{top_ratio}}],
+        backgroundColor: ['rgb(255, 99, 132)',  'rgb(75, 192, 192)', 'rgb(54, 162, 235)']
+    }] 
+};
+
+
+let pieChartDraw = function () {
+    let ctx = document.getElementById('pieChartCanvas').getContext('2d');
+    
+    window.pieChart = new Chart(ctx, {
+        type: 'pie',
+        data: pieChartData,
+        options: {
+            responsive: false
+        }
+    });
+};
+
+let smileChartData = {
+    labels: ['긍정적','부정적'],
+    datasets: [{
+        data: [{{smile_ratio}},{{noSmile_ratio}}],
+        backgroundColor: ['rgb(255, 159, 64)', 'rgb(255, 205, 86)']
+    }] 
+};
+let smileChartDraw = function () {
+    let ctx = document.getElementById('smileChart').getContext('2d');
+    
+    window.pieChart = new Chart(ctx, {
+        type: 'pie',
+        data: smileChartData,
+        options: {
+            responsive: false
+        }
+    });
+};
+
+let textResult = function () {
+  let left={{left_ratio}}
+  let right= {{right_ratio}}
+  let top= {{top_ratio}}
+  let smile ={{smile_ratio}}
+  let noSmile={{noSmile_ratio}}
+  let center ={{center_ratio}}
+  if(center/10 < left+right+top){
+    document.getElementById("resultEye-1").innerHTML="면접볼때 시선이 불안정합니다. 시선에 대한 교정이 필요해보입니다.반복적으로 눈을 돌려 메모를 읽거나 하는 등의 행동은 산만해 보일 수 있어 주의하며, 면접관과 아이컨택트 한다고 생각하여 카메라를 집중력 있게 응시한다면 지원자의 자신감을 충분히 전달할 수 있습니다. ";
+    if(left>right){
+    document.getElementById("resultEye-2").innerHTML="상대적으로 왼쪽으로 시선이 많이 움직입니다.";
+    }
+    else{
+    document.getElementById("resultEye-2").innerHTML="상대적으로 오른쪽으로 시선이 많이 움직입니다.";
+    }
+  
+  }
+  else{
+    document.getElementById("resultEye-1").innerHTML="면접볼때 시선이 안정적입니다.";
+  }
+  if(smile>noSmile){
+    document.getElementById("resultSmile").innerHTML="밝은 표정으로 면접에 임하여 자신감 있어보이는 모습이 좋습니다.";
+  }
+  else{
+    document.getElementById("resultSmile").innerHTML="긴장하여 얼굴 표정이 굳어있습니다. 좋은 첫인상을 남기기 위해서 표정연습이 필요해보입니다.";
+  }
+};
+</script>
