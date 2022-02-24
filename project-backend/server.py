@@ -18,12 +18,6 @@ import json
 CHUNK = 2**10
 RATE = 44100
 
-#pip install pipwin
-#pipwin install pyaudio
-
-# pip install flask_sqlalchemy
-# pip install pymysql
-
 p=pyaudio.PyAudio()
 stream=p.open(format=pyaudio.paInt16,channels=1,rate=RATE,input=True,frames_per_buffer=CHUNK)
 
@@ -44,17 +38,13 @@ joinId = ""
 joinPw = ""
 loginId = ""
 loginPw = ""
-
-#Load pretrained face detection model    
-
-#instatiate flask app  
+ 
 app = Flask(__name__, template_folder='./templates')
-
 gaze = GazeTracking()
 camera = cv2.VideoCapture()
 
 # database 설정파일
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:gkdl1367!@localhost:3306/mydata?charset=utf8"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:hyesoo@localhost:3306/mydata?charset=utf8"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
@@ -73,22 +63,18 @@ def gen_frames():  # generate frame by frame from camera
                 smiles = SMILE_CASCADE.detectMultiScale(region_of_interest_bw, 1.7, 22)
                 if len(smiles):
                     for sx, sy, sw, sh in smiles:
-                        # cv2.putText(frame, 'smile', (50, 50), 0, 3, (0, 0, 255), 2, cv2.LINE_4)
                         smile += 1
                 else:
-                    # cv2.putText(frame, 'no smile', (50, 50), 0, 3, (0, 0, 255), 2, cv2.LINE_4)
-                    noSmile += 1
+                    noSmile += 0.2
             data = np.frombuffer(stream.read(CHUNK),dtype=np.int16)
             voice=int(np.average(np.abs(data)))
-            if(voice>1700):
+            if(voice>2000):
                 frame= cv2.putText(frame,"Your voice is too loud", (0,25), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),4)
-            elif(voice<250 and voice>100):
+            elif(voice<300 and voice>250):
                 frame= cv2.putText(frame,"Your voice is too small.", (0,25), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0),4)
             
-            print(voice)
             gaze.refresh(frame)
             frame = gaze.annotated_frame()
-            text = ""
 
             if gaze.is_top():
                 top += 1
@@ -102,12 +88,6 @@ def gen_frames():  # generate frame by frame from camera
             elif gaze.is_center():
                 center += 1
 
-            # cv2.putText(frame, text, (90, 60), cv2.FONT_HERSHEY_DUPLEX, 1.6, (147, 58, 31), 2)
-            # cv2.putText(frame, "Left : %d"%left, (120, 100), cv2.FONT_HERSHEY_DUPLEX, 0.7, (147, 58, 31), 1)
-            # cv2.putText(frame, "Right : %d"%right, (120, 135), cv2.FONT_HERSHEY_DUPLEX, 0.7, (147, 58, 31), 1)
-            # cv2.putText(frame, "Top : %d"%top, (120, 170), cv2.FONT_HERSHEY_DUPLEX, 0.7, (147, 58, 31), 1)
-            # cv2.putText(frame, "center : %d"%center, (120, 200), cv2.FONT_HERSHEY_DUPLEX, 0.7, (147, 58, 31), 1)
-           
         try:
             ret, jpeg = cv2.imencode('.jpg', frame)
             frame = jpeg.tobytes()
@@ -144,6 +124,7 @@ def login():
 def join():
     return render_template('index.html')
 
+# 회원가입을 위한 DB설정
 @app.route('/join/register', methods=['POST', 'GET'])
 def register():
     global joinId, joinPw
@@ -159,16 +140,14 @@ def register():
     except exc.IntegrityError:
         db.session.rollback()
         return 'Failed', 403
-   
-    # return 'Done'
 
+# 로그인을 위한 DB설정
 @app.route('/login/userLogin', methods=['POST', 'GET'])
 def get_user():
     global loginId, loginPw
     userInfo = request.get_json()
     loginId = userInfo['userId']
     loginPw = userInfo['passWord']
-    
     chkId = Users.query.filter_by(userId=loginId).first()
 
     if (chkId != None): 
@@ -179,9 +158,9 @@ def get_user():
     else:
         loginId = ""
         loginPw = ""
-        
         return 'Failed', 404
 
+# 로그아웃을 위한 DB설정
 @app.route('/logout')
 def logout():
     global loginId, loginPw
@@ -197,8 +176,7 @@ def video_feed():
 def tasks():
     global switch,camera,left,right,smile,noSmile,top,center, cnt
     if request.method == 'POST':
-        if  request.form.get('stop') == 'Stop/Start':
-            
+        if  request.form.get('stop') == 'Stop/Start':  
             if(switch==0):
                 switch=1
                 smile=0
@@ -224,9 +202,7 @@ def tasks():
                                               
                     feedbacks=Records(loginId,left_ratio,right_ratio,top_ratio,smile_ratio,noSmile_ratio)
                     db.session.add(feedbacks)
-                    db.session.commit()
-                    
-                #결과가 아무것도 없을때
+                    db.session.commit()        
                 except ZeroDivisionError:
                     text = '결과 없음'
                     left_ratio = '0.0' 
@@ -236,8 +212,6 @@ def tasks():
                     noSmile_ratio = '0.0'
                     return render_template('test.html',text=text,left_ratio=left_ratio, right_ratio=right_ratio, top_ratio=top_ratio,smile_ratio=smile_ratio, noSmile_ratio=noSmile_ratio)
                 return render_template('test.html',left_ratio=left_ratio, right_ratio=right_ratio, top_ratio=top_ratio,                     center_ratio=center_ratio,smile_ratio=smile_ratio, noSmile_ratio=noSmile_ratio,loginId=loginId)
-
-            
     elif request.method=='GET':
         return render_template('index.html')
     return render_template('index.html')
@@ -246,4 +220,4 @@ if __name__ == '__main__':
     app.run()
 
 camera.release()
-cv2.destroyAllWindows()  
+cv2.destroyAllWindows()

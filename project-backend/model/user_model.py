@@ -26,9 +26,7 @@ class Records(db.Model):
     top_ratio = db.Column(db.String(20, 'utf8mb4_unicode_ci'))
     smile_ratio = db.Column(db.String(20, 'utf8mb4_unicode_ci'))
     noSmile_ratio = db.Column(db.String(20, 'utf8mb4_unicode_ci'))
-
     record_date = db.Column(db.DateTime, default=datetime.today())
-
     user_rec = relationship('Users', foreign_keys='Records.user_id')
 
     def __init__(self, user_id, left_ratio, right_ratio, top_ratio, smile_ratio, noSmile_ratio):
@@ -38,3 +36,9 @@ class Records(db.Model):
         self.top_ratio = top_ratio
         self.smile_ratio = smile_ratio
         self.noSmile_ratio = noSmile_ratio
+
+
+
+
+    
+      

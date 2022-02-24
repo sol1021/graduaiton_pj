@@ -2,14 +2,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import './login.css';
 
-
   function joinPage(e){
       window.location.href ="/join"
   }
   function homePage(e){
     window.location.href ="/"
-}
-  
+  }
 
 class Login extends React.Component {
   constructor(props) {
@@ -30,21 +28,21 @@ class Login extends React.Component {
   handlePassWord = e => {
     this.setState({
       passWord : e.target.value
-    })
-  }
+    });
+  };
 
   handleSubmit = e => {
     e.preventDefault();
-
     this.setState({
       userId : this.state.userId,
       passWord : this.state.passWord,
-    })
-    
+    });  
+
     var data = {
       userId : this.state.userId,
       passWord : this.state.passWord
     }
+    
     var userData = JSON.stringify(data);
  
     const loginInfo = {
@@ -64,7 +62,7 @@ class Login extends React.Component {
         alert("아이디와 비밀번호를 확인해주세요.")
       }
     })
-  }
+  };
 
   render() {
     return (
@@ -72,7 +70,15 @@ class Login extends React.Component {
       <form method="post" class="loginForm">
       <h2>Login</h2>
       <div className="idForm">
-      <input id="id" className="id" type="text" name="userId" value={this.state.userId} placeholder="아이디를 입력해주세요" onChange={this.handleUserId}/>
+      <input
+        id="id" 
+        className="id" 
+        type="text" 
+        name="userId" 
+        value={this.state.userId} 
+        placeholder="아이디를 입력해주세요" 
+        onChange={this.handleUserId}
+      />
       </div>
       <div className="passForm">
       <input
@@ -92,7 +98,7 @@ class Login extends React.Component {
       </form>
       </div>
     );
-  }
+  };
 }
 
 export default Login;

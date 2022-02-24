@@ -2,9 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import './join.css';
 
-
-
-
 function joinPage(e){
   window.location.href ="/join"
 }
@@ -32,14 +29,14 @@ class Join extends React.Component {
   handlePassWord = e => {
     this.setState({
       passWord : e.target.value
-    })
-  }
+    });
+  };
 
   handleRepassWord= e => {
     this.setState({
       repassWord : e.target.value
-    })
-  }
+    });
+  };
 
   handleSubmit = e => {
     e.preventDefault();
@@ -47,7 +44,7 @@ class Join extends React.Component {
       userId : this.state.userId,
       passWord : this.state.passWord,
       repassWord : this.state.repassWord
-    })
+    });
     if (this.state.passWord === this.state.repassWord){
         alert('비밀번호 일치');  
   
@@ -55,6 +52,7 @@ class Join extends React.Component {
           userId : this.state.userId,
           passWord : this.state.passWord
         }
+
         var userData = JSON.stringify(data);
         
         const joinInfo = {
@@ -74,15 +72,14 @@ class Join extends React.Component {
             alert("회원가입 실패\n이미 존재하는 아이디입니다.")
             joinPage()
           }
-        })
-        
-    }else{
+        })      
+    }else {
         alert('비밀번호 불일치');
         this.setState({
           userId : "",
           passWord : "",
           repassWord : ""
-        })
+        });
         joinPage()
     }
   }
